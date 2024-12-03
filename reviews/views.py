@@ -11,23 +11,34 @@ from django.views.generic.edit import FormView
 # Create your views here.
 
 
-class ReviewView(View):
-    def get(self,request):
-        form = ReviewForm()
+# class ReviewView(View):
+#     def get(self,request):
+#         form = ReviewForm()
 
-        return render(request, "reviews/review.html",{
-             "form":form
-        })
+#         return render(request, "reviews/review.html",{
+#              "form":form
+#         })
 
-    def post(self,request):
-        form = ReviewForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return HttpResponseRedirect("/thank_you")
+#     def post(self,request):
+#         form = ReviewForm(request.POST)
+#         if form.is_valid():
+#             form.save()
+#             return HttpResponseRedirect("/thank_you")
 
-        return render(request, "reviews/review.html",{
-         "form":form
-        })
+#         return render(request, "reviews/review.html",{
+#          "form":form
+#         })
+
+class ReviewView(FormView):
+    form_class = ReviewForm
+    template_name = "reviews/review.html"
+    #post
+    success_url = "/thank_you"
+
+    def form_valid(self, form):
+        form.save()
+        return super().form_valid(form)
+    
 
 def review(request):
     if request.method == 'POST':
