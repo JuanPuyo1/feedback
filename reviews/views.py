@@ -1,10 +1,13 @@
 from typing import Any
+from django.db.models.query import QuerySet
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.views import View
 from .forms import ReviewForm
 from .models import Review
 from django.views.generic.base import TemplateView
+from django.views.generic import ListView, DetailView
+from django.views.generic.edit import FormView
 # Create your views here.
 
 
@@ -61,21 +64,26 @@ class ThankYouView(TemplateView):
         return context
     
 
-class ReviewListView(TemplateView):
+class ReviewListView(ListView):
     template_name = "reviews/review_list.html"
+    model= Review
+    context_object_name = "reviews"
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)   
-        reviews = Review.objects.all()
-        context["reviews"] = reviews
-        return context
+    # def get_queryset(self):
+    #     base_query = super().get_queryset()
+    #     data = base_query.filter(rating__gt=4)
+    #     return data
+
+# class DetailReview(TemplateView):
+#     template_name = "reviews/detail_review.html"
     
-class DetailReview(TemplateView):
-    template_name = "reviews/detail_review.html"
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs) 
+#         review_id = kwargs["id"]  
+#         select_review = Review.objects.get(pk=review_id)
+#         context["review"] = select_review
+#         return context
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs) 
-        review_id = kwargs["id"]  
-        select_review = Review.objects.get(pk=review_id)
-        context["review"] = select_review
-        return context
+class DetailReview(DetailView):
+    template_name = "reviews/detail_review.html"
+    model = Review
