@@ -15,7 +15,11 @@
 <p>
     {{review.review_text}}
 </p>
-
+<form action="/reviews/favorite" method="POST">
+    <input type="hidden" name="review_id" value="{{review.id}}">
+    <button>Favorite</button>
+</form>
+    
 
 {% endblock content %}
 
